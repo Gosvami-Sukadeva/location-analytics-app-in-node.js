@@ -1,6 +1,9 @@
 const fsp = require('fs').promises;
 const fs = require('fs');
+const schema = require('../utilities/Validation/schema');
 const calculateDistance = require('../utilities/calculateDistance');
+const catchAsync = require('../utilities/catchAsync');
+const AppError = require('../utilities/appError');
 
 exports.getAnalytics = catchAsync(async(req, res, next) => {
   const { ip } = req.query;
