@@ -1,5 +1,6 @@
 const fsp = require('fs').promises;
 const fs = require('fs');
+const calculateDistance = require('../utilities/calculateDistance');
 
 exports.getAnalytics = async(req, res, next) => {
   const { ip } = req.query;
@@ -27,7 +28,8 @@ exports.getAnalytics = async(req, res, next) => {
       if (i == coordinatesArray.length - 1) {
         break;
       }
-      let distance = calculateDistance(coordinatesArray[i], coordinatesArray[i=+1]);
+      let distance = calculateDistance(coordinatesArray[i], coordinatesArray[i+1]);
       totalLength += distance;
     }
-}
+    res.status(200).json({distance: totalLength})
+};
