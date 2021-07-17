@@ -1,7 +1,9 @@
 const fsp = require('fs').promises;
 const fs = require('fs');
+const catchAsync = require('../utilities/catchAsync');
+const AppError = require('../utilities/appError');
 
-postAnalytics = async(req, res, next) => {
+exports.postAnalytics = catchAsync(async(req, res, next) => {
   const {ip, coordinates } = req.body;
   const validator = await schema.validateAsync(req.body);
   let reportAnalytics = [];
@@ -12,7 +14,7 @@ postAnalytics = async(req, res, next) => {
     reportAnalytics = JSON.parse(reportFile)
   } else {
     // if file does not exist
-    return('File does not exist');
+    return next(new AppError('File does not exist', 404));
   }
   reportAnalytics.push({...req.body, createdAt: new Date()});
   await fsp.writeFile(`${__dirname}/storeAnalytics.json`, JSON.stringify(reportAnalytics));
@@ -22,7 +24,7 @@ postAnalytics = async(req, res, next) => {
       message: 'IP and Coordinates successfully taken'
     }
   })
-};
+});
 
 
 

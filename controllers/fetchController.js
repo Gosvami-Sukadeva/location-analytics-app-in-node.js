@@ -2,7 +2,7 @@ const fsp = require('fs').promises;
 const fs = require('fs');
 const calculateDistance = require('../utilities/calculateDistance');
 
-exports.getAnalytics = async(req, res, next) => {
+exports.getAnalytics = catchAsync(async(req, res, next) => {
   const { ip } = req.query;
   let reportAnalytics = [];
   if(fs.existsSync(`${__dirname}/storeAnalytics.json`)){
@@ -13,7 +13,7 @@ exports.getAnalytics = async(req, res, next) => {
   }
   for (let i=0; i<reportAnalytics.length; i++){
     if(reportAnalytics[i].ip !== ip) {
-      return ('No Coordinates found with that IP', 404);
+      return next(new AppError('No Coordinates found with that IP', 404));
     };
   }
   const hourAgo = new Date();
@@ -32,4 +32,4 @@ exports.getAnalytics = async(req, res, next) => {
       totalLength += distance;
     }
     res.status(200).json({distance: totalLength})
-};
+});
